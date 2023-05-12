@@ -77,7 +77,7 @@ final class NetworkService {
     
     private func handleNetworkResponse(_ response: HTTPURLResponse) -> NetworkResult<NetworkResponse> {
         switch response.statusCode {
-        case 200...299 : return .success
+        case 200 : return .success
         case 400 : return .failure(NetworkResponse.responseFromTheServer)
         case 401 : return .failure(NetworkResponse.authenticationError)
         case 500 : return .failure(NetworkResponse.failed)

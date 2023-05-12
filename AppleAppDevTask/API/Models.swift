@@ -8,14 +8,14 @@
 import Foundation
 
 // MARK: - WelcomeElement
-struct ResponseItem: Codable {
+struct ResponseItem: Decodable, Hashable  {
     let company: Company
     let customerMarkParameters: CustomerMarkParameters
     let mobileAppDashboard: MobileAppDashboard
 }
 
 // MARK: - Company
-struct Company: Codable {
+struct Company: Decodable, Hashable {
     let companyID: String
 
     enum CodingKeys: String, CodingKey {
@@ -24,20 +24,20 @@ struct Company: Codable {
 }
 
 // MARK: - CustomerMarkParameters
-struct CustomerMarkParameters: Codable {
+struct CustomerMarkParameters: Decodable, Hashable  {
     let loyaltyLevel: LoyaltyLevel
     let mark: Int
 }
 
 // MARK: - LoyaltyLevel
-struct LoyaltyLevel: Codable {
+struct LoyaltyLevel: Decodable, Hashable  {
     let number: Int
     let name: String
     let requiredSum, markToCash, cashToMark: Int
 }
 
 // MARK: - MobileAppDashboard
-struct MobileAppDashboard: Codable {
+struct MobileAppDashboard: Decodable, Hashable  {
     let companyName: String
     let logo: String
     let backgroundColor, mainColor, cardBackgroundColor, textColor: String

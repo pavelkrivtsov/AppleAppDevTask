@@ -14,9 +14,11 @@ protocol ViewInput: AnyObject {
 final class ViewController: UIViewController {
     
     private let presenter: ViewOutput
+    private let tableView: UITableView
     
-    init(presenter: ViewOutput) {
+    init(presenter: ViewOutput, tableView: UITableView) {
         self.presenter = presenter
+        self.tableView = tableView
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -25,6 +27,9 @@ final class ViewController: UIViewController {
     }
     override func viewDidLoad() {
         super.viewDidLoad()
+        view.addSubview(tableView)
+        tableView.backgroundColor = .blue
+        tableView.frame = view.bounds
         presenter.getAllCompanies()
     }
 }
