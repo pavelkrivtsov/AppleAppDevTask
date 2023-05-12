@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import SnapKit
 
 protocol ViewInput: AnyObject {
 
@@ -27,8 +28,9 @@ final class ViewController: UIViewController {
     }
     override func viewDidLoad() {
         super.viewDidLoad()
+        view.backgroundColor = .lightGray
         view.addSubview(tableView)
-        tableView.backgroundColor = .blue
+        tableView.backgroundColor = .clear
         tableView.frame = view.bounds
         presenter.getAllCompanies()
     }

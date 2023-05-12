@@ -36,7 +36,7 @@ extension Presenter: ViewOutput {
             guard let self = self else { return }
             switch result {
             case .success(let items):
-                tableManager.appendItems(from: items)
+                self.tableManager.appendItems(from: items)
             case .failure(let error):
                 print(error)
             }
