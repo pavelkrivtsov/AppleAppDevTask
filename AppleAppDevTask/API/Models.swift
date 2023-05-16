@@ -43,3 +43,8 @@ struct MobileAppDashboard: Decodable, Hashable  {
     let backgroundColor, mainColor, cardBackgroundColor, textColor: String
     let highlightTextColor, accentColor: String
 }
+
+// MARK: - Error
+struct MassegeFromServer: Decodable {
+    let type, message: String
+}

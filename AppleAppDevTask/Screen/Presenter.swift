@@ -38,7 +38,7 @@ extension Presenter: ViewOutput {
             case .success(let items):
                 self.tableManager.appendItems(from: items)
             case .failure(let error):
-                print(error)
+                view?.showAlert(error)
             }
         }
     }

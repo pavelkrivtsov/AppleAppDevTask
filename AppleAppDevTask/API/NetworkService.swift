@@ -7,13 +7,22 @@
 
 import Foundation
 
-enum NetworkResponse: String, Error {
-    case authenticationError = "Ошибка авторизации"
-    case failed = "Все упало"
-    case responseFromTheServer = "Ответ от сервера"
-    case badRequest = "Bad request"
-    case noData = "No data"
-    case unableToDecode = "Unable to decode"
+enum NetworkResponse: LocalizedError {
+    
+    case badRequest(String)
+    case unauthorized
+    case internalServerError
+    
+    var errorDescription: String? {
+        switch self {
+        case .badRequest(let massage):
+            return NSLocalizedString(massage, comment: "")
+        case .unauthorized:
+            return NSLocalizedString("ошибка авторизации", comment: "")
+        case .internalServerError:
+            return NSLocalizedString("все упало", comment: "")
+        }
+    }
 }
 
 protocol NetworkServiceOutput {
@@ -22,11 +31,11 @@ protocol NetworkServiceOutput {
 
 final class NetworkService {
     
-    enum NetworkResult<Error> {
+    private enum NetworkResult<Error> {
         case success
         case failure(Error)
     }
- 
+    
     private func createRequest(from url: URL) -> URLRequest? {
         let parameters = ["offset": "0"]
         guard let httpBody = try? JSONSerialization.data(withJSONObject: parameters) else { return nil }
@@ -37,52 +46,43 @@ final class NetworkService {
         return request
     }
     
-    private func taskResume<T: Decodable>(from request: URLRequest,
-                                          type: T.Type,
-                                          onCompletion: @escaping(Result<T, NetworkResponse>) -> Void) {
+    private func taskResume(from request: URLRequest,
+                            onCompletion: @escaping(Result<[ResponseItem], NetworkResponse>) -> Void) {
         
         let task = URLSession.shared.dataTask(with: request) { [weak self] data, response, error in
             DispatchQueue.main.async {
                 
-                guard let `self` = self else { return }
-                if error != nil {
-                    onCompletion(.failure(NetworkResponse.failed))
+                guard error == nil,
+                      let response = response as? HTTPURLResponse,
+                      let data = data else {
+                    print(error!.localizedDescription)
+                    return
                 }
                 
-                if let response = response as? HTTPURLResponse {
-                    let result = self.handleNetworkResponse(response)
-                    switch result {
-                    case .success:
-                        guard let responseData = data else {
-                            onCompletion(.failure(NetworkResponse.noData))
-                            return
-                        }
-                        
-                        do {
-                            let apiResponse = try JSONDecoder().decode(type, from: responseData)
-                            onCompletion(.success(apiResponse))
-                        } catch {
-                            onCompletion(.failure(NetworkResponse.unableToDecode))
-                        }
-                        
-                    case .failure(let failureError):
-                        onCompletion(.failure(failureError))
+                switch response.statusCode {
+                case 200:
+                    do {
+                        let apiResponse = try JSONDecoder().decode([ResponseItem].self, from: data)
+                        onCompletion(.success(apiResponse))
+                    } catch {
+                        print(error.localizedDescription)
                     }
                     
+                case 400:
+                    do {
+                        let message = try JSONDecoder().decode(MassegeFromServer.self, from: data)
+                        onCompletion(.failure(.badRequest(message.message)))
+                    } catch {
+                        print(error.localizedDescription)
+                    }
+                case 401: onCompletion(.failure(.unauthorized))
+                case 500: onCompletion(.failure(.internalServerError))
+                default: break
                 }
+                
             }
         }
         task.resume()
-    }
-    
-    private func handleNetworkResponse(_ response: HTTPURLResponse) -> NetworkResult<NetworkResponse> {
-        switch response.statusCode {
-        case 200 : return .success
-        case 400 : return .failure(NetworkResponse.responseFromTheServer)
-        case 401 : return .failure(NetworkResponse.authenticationError)
-        case 500 : return .failure(NetworkResponse.failed)
-        default: return .failure(NetworkResponse.badRequest)
-        }
     }
 }
 
@@ -94,19 +94,19 @@ extension NetworkService: NetworkServiceOutput {
         urlComponents.scheme = "http"
         urlComponents.host = "dev.bonusmoney.pro"
         urlComponents.path = "/mobileapp/getAllCompanies"
-
+        
         
         guard let url = urlComponents.url,
               let request = self.createRequest(from: url) else { return }
         
-        taskResume(from: request, type: [ResponseItem].self) { result in
+        taskResume(from: request) { result in
             switch result {
             case .success(let items):
                 onCompletion(.success(items))
-            case .failure(let failureError): 
+            case .failure(let failureError):
                 onCompletion(.failure(failureError))
             }
         }
     }
-
+    
 }
