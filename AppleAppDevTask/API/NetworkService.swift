@@ -49,7 +49,7 @@ final class NetworkService {
     private func taskResume(from request: URLRequest,
                             onCompletion: @escaping(Result<[ResponseItem], NetworkResponse>) -> Void) {
         
-        let task = URLSession.shared.dataTask(with: request) { [weak self] data, response, error in
+        let task = URLSession.shared.dataTask(with: request) { data, response, error in
             DispatchQueue.main.async {
                 
                 guard error == nil,
@@ -70,11 +70,12 @@ final class NetworkService {
                     
                 case 400:
                     do {
-                        let message = try JSONDecoder().decode(MassegeFromServer.self, from: data)
-                        onCompletion(.failure(.badRequest(message.message)))
+                        let error = try JSONDecoder().decode(MassegeFromServer.self, from: data)
+                        onCompletion(.failure(.badRequest(error.message)))
                     } catch {
                         print(error.localizedDescription)
                     }
+                    
                 case 401: onCompletion(.failure(.unauthorized))
                 case 500: onCompletion(.failure(.internalServerError))
                 default: break
@@ -86,6 +87,7 @@ final class NetworkService {
     }
 }
 
+// MARK: - NetworkServiceOutput
 extension NetworkService: NetworkServiceOutput {
     
     func getAllCompanies(onCompletion: @escaping (Result<[ResponseItem], NetworkResponse>) -> Void) {
@@ -94,7 +96,6 @@ extension NetworkService: NetworkServiceOutput {
         urlComponents.scheme = "http"
         urlComponents.host = "dev.bonusmoney.pro"
         urlComponents.path = "/mobileapp/getAllCompanies"
-        
         
         guard let url = urlComponents.url,
               let request = self.createRequest(from: url) else { return }

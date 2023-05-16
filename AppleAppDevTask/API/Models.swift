@@ -44,7 +44,7 @@ struct MobileAppDashboard: Decodable, Hashable  {
     let highlightTextColor, accentColor: String
 }
 
-// MARK: - Error
+// MARK: - MassegeFromServer
 struct MassegeFromServer: Decodable {
     let type, message: String
 }

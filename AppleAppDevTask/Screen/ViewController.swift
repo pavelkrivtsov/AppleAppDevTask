@@ -46,6 +46,7 @@ final class ViewController: UIViewController {
     }()
 }
 
+// MARK: - ViewInput
 extension ViewController: ViewInput {
     
     func showAlert(_ error: NetworkResponse) {
@@ -59,7 +60,7 @@ extension ViewController {
     
     func embedInNavigationController() -> UINavigationController {
         let navigationController = UINavigationController(rootViewController: self)
-        navigationController.navigationBar.topItem?.title = "TEST"
+        navigationController.navigationBar.topItem?.title = "Управление картами"
         return navigationController
     }
 }
