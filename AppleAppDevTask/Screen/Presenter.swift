@@ -13,7 +13,7 @@ protocol ViewOutput: AnyObject {
 }
 
 protocol TableManagerInput: AnyObject {
-    
+    func appendCompanies()
 }
 
 final class Presenter {
@@ -26,12 +26,17 @@ final class Presenter {
         self.networkSevice = networkSevice
         self.tableManager = tableManager
     }
+    
+    private func stratActivityIndicator() {
+        tableManager.startActivityIndicator()
+    }
 }
 
 // MARK: - ViewOutput
 extension Presenter: ViewOutput {
     
     func getAllCompanies() {
+        stratActivityIndicator()
         networkSevice.getAllCompanies { [weak self] result in
             guard let self = self else { return }
             switch result {
@@ -39,6 +44,7 @@ extension Presenter: ViewOutput {
                 self.tableManager.appendItems(from: items)
             case .failure(let error):
                 view?.showAlert(error)
+                self.tableManager.cancelActivityIndicator()
             }
         }
     }
@@ -46,5 +52,7 @@ extension Presenter: ViewOutput {
 
 // MARK: - TableManagerInput
 extension Presenter: TableManagerInput{
-    
+    func appendCompanies() {
+        getAllCompanies()
+    }
 }
