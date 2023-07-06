@@ -79,7 +79,7 @@ final class CustomCell: UITableViewCell {
         cardView.addSubview(requiredSumTextLabel)
         requiredSumTextLabel.snp.makeConstraints {
             $0.leading.equalTo(requiredSumIntLabel.snp.trailing).offset(8)
-            $0.bottom.equalTo(requiredSumIntLabel.snp.bottom).inset(1)
+            $0.firstBaseline.equalTo(requiredSumIntLabel.snp.firstBaseline)
         }
         
         cardView.addSubview(cashbackLabel)
@@ -145,27 +145,31 @@ final class CustomCell: UITableViewCell {
         logoImageView.clipsToBounds = true
         
         companyNameLabel.font = .systemFont(ofSize: 24)
-//        companyNameLabel.backgroundColor = .green
+        companyNameLabel.backgroundColor = .green
+        companyNameLabel.numberOfLines = 2
+        companyNameLabel.lineBreakMode = .byWordWrapping
         
         topSeperatorLine.backgroundColor = .lightGray
         
         requiredSumIntLabel.font = .systemFont(ofSize: 24, weight: .bold)
-        requiredSumIntLabel.clipsToBounds = true
+//        requiredSumIntLabel.clipsToBounds = true
+        requiredSumIntLabel.backgroundColor = .gray
         
         requiredSumTextLabel.text = "баллов"
         requiredSumTextLabel.font = .systemFont(ofSize: 20)
+        requiredSumTextLabel.backgroundColor = .gray
         
         cashbackLabel.text = "Кешбэк"
         cashbackLabel.font = .systemFont(ofSize: 16)
-//        cashbackLabel.backgroundColor = .green
+        cashbackLabel.backgroundColor = .green
         cashbackPercentLabel.font = .systemFont(ofSize: 20)
-//        cashbackPercentLabel.backgroundColor = .green
+        cashbackPercentLabel.backgroundColor = .green
         
         lavelLabel.text = "Уровень"
         lavelLabel.font = .systemFont(ofSize: 16)
-//        lavelLabel.backgroundColor = . green
+        lavelLabel.backgroundColor = . green
         lavelGradeLabel.font = .systemFont(ofSize: 20)
-//        lavelGradeLabel.backgroundColor = .green
+        lavelGradeLabel.backgroundColor = .green
         
         bottomSeparatorLine.backgroundColor = .lightGray
         
@@ -178,9 +182,11 @@ final class CustomCell: UITableViewCell {
 
         eyeButton.setImage(.init(systemName: "eye"), for: .normal)
         eyeButton.imageView?.contentMode = .scaleAspectFit
+        eyeButton.backgroundColor = .gray
 
         trashButton.setImage(.init(systemName: "trash"), for: .normal)
         trashButton.imageView?.contentMode = .scaleAspectFit
+        trashButton.backgroundColor = .gray
     }
     
     required init?(coder: NSCoder) {
