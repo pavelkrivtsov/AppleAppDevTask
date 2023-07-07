@@ -1,8 +1,10 @@
 # AppleAppDevTask
 
-<img src="https://github.com/pavelkrivtsov/AppleAppDevTask/assets/72617749/16745d62-b7e0-403f-a1cc-18a8328ad6e2" width="250" height="500" /> <img src="https://github.com/pavelkrivtsov/AppleAppDevTask/assets/72617749/1b344536-e3b4-45e8-8990-9a635caeef3d" width="250" height="500" /> <img src="https://github.com/pavelkrivtsov/AppleAppDevTask/assets/72617749/e06de995-c146-48c4-8ac6-f28798ad6c15" width="250" height="500" />
+<img src="https://github.com/pavelkrivtsov/AppleAppDevTask/assets/72617749/16745d62-b7e0-403f-a1cc-18a8328ad6e2" alt="drawing" width="250"/>
+<img src="https://github.com/pavelkrivtsov/AppleAppDevTask/assets/72617749/1b344536-e3b4-45e8-8990-9a635caeef3d" alt="drawing" width="250"/>
+<img src="https://github.com/pavelkrivtsov/AppleAppDevTask/assets/72617749/e06de995-c146-48c4-8ac6-f28798ad6c15" alt="drawing" width="250"/>
 
-Требуется реализовать экран загрузки карт компаний. 
+### Требуется реализовать экран загрузки карт компаний. 
 
 Экран – это динамический список карт компаний, который подгружается
 порционно с сервера. Верстка экрана осуществляется согласно
